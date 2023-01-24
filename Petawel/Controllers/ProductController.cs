@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Petawel.Controllers.Models;
+using System.Data;
 using System.Data.SqlClient;
+using System.Text.Json.Serialization;
 
 namespace Petawel.Controllers
 {
@@ -35,6 +38,24 @@ namespace Petawel.Controllers
           
             return response;
         }
-
+        //Below code Retrives All data without any Id
+        SqlConnection con = new SqlConnection("server=LAPTOP-HGF1J904\\SQLEXPRESS; database=Petawel; Integrated Security=true");
+        [HttpGet]
+        [Route("getAllitems")]
+        public String Get()
+        {
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM products", con);
+            DataTable products = new DataTable();
+            da.Fill(products);
+            if(products.Rows.Count > 0)
+            {
+                return JsonConvert.SerializeObject(products);
+            }
+            else
+            {
+                return "No Data found";
+            }
+                 
+                }
     }
 }
