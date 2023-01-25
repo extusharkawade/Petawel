@@ -53,5 +53,27 @@ namespace Petawel.Controllers.Models
 
         
         }
+        public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
+        {
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productModel.ProdName + "', price = '" + productModel.ProdPrice + "', prod_details = '" + productModel.ProdDetails + "', available_quantity = '" + productModel.AvailableQuantity + "', image_path = '" + productModel.ImagePath + "' where prod_id = '"+id+"'", sqlConnection);
+            //SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + temp + "' where prod_id = 1 ", sqlConnection);
+            sqlConnection.Open();
+            int i = cmd.ExecuteNonQuery();
+            sqlConnection.Close();
+            if (i > 0)
+            {
+                response.StatusCode = 200;
+                response.StatusMessage = "Successful";
+
+            }
+            else
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "not working";
+            }
+
+            return response;
+        }
     }
 }
