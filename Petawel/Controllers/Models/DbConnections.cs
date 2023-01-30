@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Petawel.DTO;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Petawel.Controllers.Models
@@ -74,6 +75,30 @@ namespace Petawel.Controllers.Models
             }
 
             return response;
+        }
+
+        public Response SaveProduct(SaveProductDto productModel, SqlConnection sqlConnection) {
+
+            Response response= new Response();
+            SqlCommand cmd = new SqlCommand("insert into products values('"+productModel.ProdName+"' ,'"+productModel.ProdPrice+"','"+productModel.ProdDetails+ "','" + productModel.AvailableQuantity + "', '" + productModel.ImagePath+"','"+productModel.CatId+"');", sqlConnection);
+
+            sqlConnection.Open();
+            int i = cmd.ExecuteNonQuery();
+            sqlConnection.Close();
+            if (i > 0)
+            {
+             //   response.Product = productModel;
+                response.StatusCode = 200;
+                response.StatusMessage = "Successful";
+
+            }
+            else
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "not working";
+            }
+            return response;
+
         }
     }
 }

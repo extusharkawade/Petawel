@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Petawel.Controllers.Models;
+using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.Json.Serialization;
@@ -72,6 +73,17 @@ namespace Petawel.Controllers
             product.AvailableQuantity = availablity;
             product.ImagePath = path;
             Response response = dbConnections.UpdateProduct(ProdId, sqlConnection, product );
+            return response;
+        }
+
+        [HttpPost]
+        [Route("SaveProduct")]
+        public Response SaveProduct(SaveProductDto product)
+        {
+            DbConnections dbConnections =new DbConnections();
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+
+         Response response=   dbConnections.SaveProduct(product, sqlConnection);
             return response;
         }
     }
