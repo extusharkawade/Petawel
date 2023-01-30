@@ -25,7 +25,6 @@ namespace Petawel.Controllers.Models
                     try
                     {
                         response.Product = new ProductModel();
-
                         response.Product.ProdId = (int)reader["prod_id"];
                         response.Product.ProdName = (string)reader["prod_name"];
                         //   response.Product.ProdName = reader[2].ToString();
@@ -41,24 +40,16 @@ namespace Petawel.Controllers.Models
                     {
                         response.StatusMessage = "BAD REQUEST";
                         response.StatusCode = 500;
-
                     }
-                 
-
-
-
                 }
                 else
                 {
                     response.StatusMessage = "No Product Found";
                     response.StatusCode = 100;
-
                 }
             }
             sqlConnection.Close();
             return response;
-
-        
         }
 
         public Response getAllProduct(SqlConnection sqlConnection)
@@ -101,8 +92,6 @@ namespace Petawel.Controllers.Models
             return responseresponse;
 
         }
-
-
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
             Response response = new Response();
@@ -115,14 +104,12 @@ namespace Petawel.Controllers.Models
             {
                 response.StatusCode = 200;
                 response.StatusMessage = "Successful";
-
             }
             else
             {
                 response.StatusCode = 500;
                 response.StatusMessage = "not working";
             }
-
             return response;
         }
     }
