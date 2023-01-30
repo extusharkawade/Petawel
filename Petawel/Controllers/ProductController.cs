@@ -34,7 +34,7 @@ namespace Petawel.Controllers
         { 
            // Response response = new Response();
             SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            DbConnections dbConnections = new DbConnections();
+            DbConnections dbConnections = new DbConnections(_configuration);
             Response response =dbConnections.FindProductById(ProdId,sqlConnection);
           
             return response;
@@ -43,28 +43,23 @@ namespace Petawel.Controllers
         
         [HttpGet]
         [Route("getAllitems")]
-        public String Get()
+
+        public Response Products()
         {
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM products", sqlConnection);
-            DataTable products = new DataTable();
-            da.Fill(products);
-            if(products.Rows.Count > 0)
-            {
-                return JsonConvert.SerializeObject(products);
-            }
-            else
-            {
-                return "No Data found";
-            }
-                 
-                }
+            DbConnections dbConnections = new DbConnections(_configuration);
+
+            Response response = dbConnections.getAllProduct();
+
+            return response;
+        }
+
+
         [HttpPost]
         [Route("Product_Update")]
         public Response ProductU(int ProdId, string name, int price, string details, int availablity, string path)
         {
             SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            DbConnections dbConnections = new DbConnections();
+            DbConnections dbConnections = new DbConnections(_configuration);
             ProductModel product= new ProductModel();
             product.ProdName = name;
             product.ProdPrice= price;

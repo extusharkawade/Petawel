@@ -5,6 +5,13 @@ namespace Petawel.Controllers.Models
 {
     public class DbConnections
     {
+        private readonly IConfiguration _configuration;
+        SqlConnection sqlConnection;
+        public DbConnections(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+        }
         public Response FindProductById(int id, SqlConnection sqlConnection)
         {
             Response response = new();
@@ -53,6 +60,38 @@ namespace Petawel.Controllers.Models
 
         
         }
+
+        public Response getAllProduct()
+        {
+            Response response = new Response();
+            SqlCommand sqlCommand = new SqlCommand("Select * from products", sqlConnection);
+            sqlConnection.Open();
+            //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM products", sqlConnection);
+            //DataTable products = new DataTable();
+            //da.Fill(products);
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+            while (reader.Read())
+            {
+                ProductModel productModel = new ProductModel();
+                productModel.ProdId = (int)reader["prod_id"];
+                productModel.ProdName = (string)reader["prod_name"];
+                //   response.Product.ProdName = reader[2].ToString();
+                productModel.ProdPrice = (float)(double)reader["price"];
+                productModel.ProdDetails = (string)reader["prod_details"];
+                productModel.AvailableQuantity = (int)reader["available_quantity"];
+                //productModel.ImagePath = (string)reader["image_path"];
+
+                response.StatusMessage = "Product Retrieved Successfully";
+                response.StatusCode = 200;
+
+                response.Products.Append(new ProductModel(productModel));
+
+            }
+
+            return response;
+
+        }
+
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
             Response response = new Response();
