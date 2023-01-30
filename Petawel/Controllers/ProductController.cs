@@ -40,18 +40,18 @@ namespace Petawel.Controllers
             return response;
         }
         //Below code Retrives All data without any Id
-        
+
         [HttpGet]
         [Route("getAllitems")]
-
         public Response Products()
         {
+
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
-
-            Response response = dbConnections.getAllProduct();
-
+            Response response = dbConnections.getAllProduct(sqlConnection);
             return response;
         }
+
 
 
         [HttpPost]

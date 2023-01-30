@@ -61,36 +61,47 @@ namespace Petawel.Controllers.Models
         
         }
 
-        public Response getAllProduct()
+        public Response getAllProduct(SqlConnection sqlConnection)
         {
-            Response response = new Response();
-            SqlCommand sqlCommand = new SqlCommand("Select * from products", sqlConnection);
-            sqlConnection.Open();
-            //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM products", sqlConnection);
-            //DataTable products = new DataTable();
-            //da.Fill(products);
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-            while (reader.Read())
+            Response responseresponse = new Response();
+            SqlDataAdapter da = new SqlDataAdapter("Select * from products", sqlConnection);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            List<ProductModel> products = new List<ProductModel>();
+            if (dt.Rows.Count > 0)
             {
-                ProductModel productModel = new ProductModel();
-                productModel.ProdId = (int)reader["prod_id"];
-                productModel.ProdName = (string)reader["prod_name"];
-                //   response.Product.ProdName = reader[2].ToString();
-                productModel.ProdPrice = (float)(double)reader["price"];
-                productModel.ProdDetails = (string)reader["prod_details"];
-                productModel.AvailableQuantity = (int)reader["available_quantity"];
-                //productModel.ImagePath = (string)reader["image_path"];
-
-                response.StatusMessage = "Product Retrieved Successfully";
-                response.StatusCode = 200;
-
-                response.Products.Append(new ProductModel(productModel));
-
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    ProductModel model = new ProductModel();
+                    model.ProdId = Convert.ToInt32(dt.Rows[i]["prod_id"]);
+                    model.ProdName = Convert.ToString(dt.Rows[i]["prod_name"]);
+                    model.ProdPrice = Convert.ToInt32(dt.Rows[i]["price"]);
+                    model.ProdDetails = Convert.ToString(dt.Rows[i]["prod_details"]);
+                    model.AvailableQuantity = Convert.ToInt32(dt.Rows[i]["available_quantity"]);
+                    model.ImagePath = Convert.ToString(dt.Rows[i]["image_path"]);
+                    products.Add(model);
+                }
+                if (products.Count > 0)
+                {
+                    responseresponse.StatusCode = 200;
+                    responseresponse.StatusMessage = "OK";
+                    responseresponse.Products = products;
+                }
+                else
+                {
+                    responseresponse.StatusCode = 100;
+                    responseresponse.StatusMessage = "Failed";
+                }
             }
-
-            return response;
+            else
+            {
+                responseresponse.StatusCode = 100;
+                responseresponse.StatusMessage = "Failed";
+            }
+            return responseresponse;
 
         }
+
 
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
