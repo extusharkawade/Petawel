@@ -1,6 +1,7 @@
 ﻿using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Petawel.Controllers.Models
 {
@@ -99,6 +100,32 @@ namespace Petawel.Controllers.Models
             }
             return response;
 
+        }
+
+        public Response checkCredentials(String email, string password, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+
+            SqlCommand sqlCommand = new SqlCommand("select * from users where email='" + email+"' and password='"+password+"';", sqlConnection) ;
+            sqlConnection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+  
+
+            if (reader.Read())
+            {
+                response.StatusCode = 200;
+                response.StatusMessage="Login successfulll";
+
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.StatusMessage = "Login failed";
+            }
+
+            sqlConnection.Close();
+
+            return response;
         }
     }
 }
