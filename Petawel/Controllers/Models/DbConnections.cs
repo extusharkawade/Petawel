@@ -92,6 +92,8 @@ namespace Petawel.Controllers.Models
             return responseresponse;
 
         }
+
+
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
             Response response = new Response();
@@ -112,5 +114,28 @@ namespace Petawel.Controllers.Models
             }
             return response;
         }
+
+        public Response Registration(Registration registration, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO users (name,contact,email,password) VALUES('"+registration.Name+"','"+registration.contact+"','"+registration.Email+"','"+registration.Password+"')",sqlConnection);
+            sqlConnection.Open();       
+            var i = sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+            if(i > 0)
+            {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Registration Successful";
+                }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Registration Failed";
+            }
+
+
+            return response;
+        }
+
     }
 }

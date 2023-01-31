@@ -66,5 +66,16 @@ namespace Petawel.Controllers
             Response response = dbConnections.UpdateProduct(ProdId, sqlConnection, product );
             return response;
         }
+
+        [HttpPost]
+        [Route("Registration")]
+        public Response Registration(Registration registration)
+        {
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response = dbConnections.Registration( registration,sqlConnection);
+            return response;
+        }
+
     }
 }
