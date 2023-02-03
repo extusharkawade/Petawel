@@ -3,6 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using System.Data.Common;
+using Petawel.Controllers.Models;
 
 namespace Petawel
 {
@@ -10,7 +12,7 @@ namespace Petawel
     {
 
         private readonly string key;
-        private readonly IDictionary<string, string> users = new Dictionary<string, string>();
+      //  private readonly IDictionary<string, string> users = new Dictionary<string, string>();
         //   {{"test","password"},{"test1","pwd"}};
 
 
@@ -20,11 +22,13 @@ namespace Petawel
      
         public JwtAuthenticationManager(string key)
         {
-            users.Add("test", "passworddd");
+        //    DbConnections dbConnection = new DbConnections();
+      //   users=   dbConnection.Credentials();
+       //     users.Add("test", "passworddd");
         
             this.key = key;
         }
-        public string Authenticate(string username, string password)
+        public string Authenticate(string username, string password, IDictionary<string, string> users)
         {
             if (!users.Any(u => u.Key == username && u.Value == password))
             {

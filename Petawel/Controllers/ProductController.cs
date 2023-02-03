@@ -18,27 +18,13 @@ namespace Petawel.Controllers
 
         private readonly IConfiguration _configuration;
         private readonly JwtAuthenticationManager jwtAuthenticationManager;
+        private  IDictionary<string, string> users = new Dictionary<string, string>();
+
 
         public ProductController(IConfiguration configuration,JwtAuthenticationManager jwtAuthenticationManager)
         {
             _configuration = configuration;
             this.jwtAuthenticationManager = jwtAuthenticationManager;
-
-        }
-
-        [AllowAnonymous]
-        [HttpPost("Authorize")]
-        public IActionResult AuthUser([FromBody] LoginDto loginDto)
-        {
-            var token = jwtAuthenticationManager.Authenticate(loginDto.email, loginDto.Password);
-            if(token==null)
-            {
-                return Unauthorized();
-            }
-            else
-            {
-                return Ok(token);
-            }
 
         }
 
@@ -52,64 +38,55 @@ namespace Petawel.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+      //  [Authorize]
         [Route("Product")]
         public Response Products(int ProdId)
         { 
            // Response response = new Response();
             SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            DbConnections dbConnections = new DbConnections();
-            Response response =dbConnections.FindProductById(ProdId,sqlConnection);
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response =dbConnections.FindProductById(ProdId);
           
             return response;
         }
         //Below code Retrives All data without any Id
         
         [HttpGet]
-        [Authorize]
+    //    [Authorize]
         [Route("getAllitems")]
-        public String Get()
+        public Response Products()
         {
             SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM products", sqlConnection);
-            DataTable products = new DataTable();
-            da.Fill(products);
-            if(products.Rows.Count > 0)
-            {
-                return JsonConvert.SerializeObject(products);
-            }
-            else
-            {
-                return "No Data found";
-            }
-                 
-                }
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response = dbConnections.getAllProduct();
+            return response;
+        }
         [HttpPost]
-        [Authorize]
+      //  [Authorize]
         [Route("Product_Update")]
         public Response ProductU(int ProdId, string name, int price, string details, int availablity, string path)
         {
             SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            DbConnections dbConnections = new DbConnections();
+            DbConnections dbConnections = new DbConnections(_configuration);
             ProductModel product= new ProductModel();
             product.ProdName = name;
             product.ProdPrice= price;
             product.ProdDetails = details;
             product.AvailableQuantity = availablity;
             product.ImagePath = path;
-            Response response = dbConnections.UpdateProduct(ProdId, sqlConnection, product );
+            Response response = dbConnections.UpdateProduct(ProdId, product );
             return response;
         }
 
         [HttpPost]
-        [Authorize]
+       // [Authorize]
         [Route("SaveProduct")]
         public Response SaveProduct(SaveProductDto product)
         {
-            DbConnections dbConnections =new DbConnections();
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+           // SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+            DbConnections dbConnections = new DbConnections(_configuration);
 
-         Response response=   dbConnections.SaveProduct(product, sqlConnection);
+            Response response =   dbConnections.SaveProduct(product);
             return response;
         }
     }
