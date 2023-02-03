@@ -22,3 +22,4 @@ Backend api's for the Pet Ecom
 
 
 _please note Authorization is currently disabled, to enable just remove the comment of [Authorize] anotation in controller_
+_if you enable Authorization please send authentication token in postman header_
