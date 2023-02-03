@@ -10,7 +10,7 @@ namespace Petawel.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthorizationController : ControllerBase
     {
 
         private readonly IConfiguration _configuration;
@@ -18,7 +18,7 @@ namespace Petawel.Controllers
         private IDictionary<string, string> users = new Dictionary<string, string>();
 
 
-        public LoginController(IConfiguration configuration, JwtAuthenticationManager jwtAuthenticationManager)
+        public AuthorizationController(IConfiguration configuration, JwtAuthenticationManager jwtAuthenticationManager)
         {
             _configuration = configuration;
             this.jwtAuthenticationManager = jwtAuthenticationManager;

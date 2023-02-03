@@ -20,7 +20,7 @@ namespace Petawel.Controllers.Models
 
 
         }
-       
+
         public Response FindProductById(int id)
         {
             Response response = new();
@@ -34,7 +34,6 @@ namespace Petawel.Controllers.Models
                     try
                     {
                         response.Product = new ProductModel();
-
                         response.Product.ProdId = (int)reader["prod_id"];
                         response.Product.ProdName = (string)reader["prod_name"];
                         //   response.Product.ProdName = reader[2].ToString();
@@ -50,7 +49,6 @@ namespace Petawel.Controllers.Models
                     {
                         response.StatusMessage = "BAD REQUEST";
                         response.StatusCode = 500;
-
                     }
 
 
@@ -61,17 +59,14 @@ namespace Petawel.Controllers.Models
                 {
                     response.StatusMessage = "No Product Found";
                     response.StatusCode = 100;
-
                 }
             }
             sqlConnection.Close();
             return response;
-
-
         }
 
 
-
+    
         public Response getAllProduct()
         {
             Response responseresponse = new Response();
@@ -126,13 +121,33 @@ namespace Petawel.Controllers.Models
             {
                 response.StatusCode = 200;
                 response.StatusMessage = "Successful";
-
             }
             else
             {
                 response.StatusCode = 500;
                 response.StatusMessage = "not working";
             }
+            return response;
+        }
+
+        public Response Registration(Registration registration, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO users (name,contact,email,password) VALUES('"+registration.Name+"','"+registration.contact+"','"+registration.Email+"','"+registration.Password+"')",sqlConnection);
+            sqlConnection.Open();       
+            var i = sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+            if(i > 0)
+            {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Registration Successful";
+                }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Registration Failed";
+            }
+
 
             return response;
         }
@@ -239,4 +254,5 @@ namespace Petawel.Controllers.Models
 
         }
     }
+
 }

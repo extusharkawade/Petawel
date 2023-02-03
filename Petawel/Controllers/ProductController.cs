@@ -49,8 +49,8 @@ namespace Petawel.Controllers
           
             return response;
         }
-        //Below code Retrives All data without any Id
-        
+
+        //Below API Retrives All data without any Id
         [HttpGet]
     //    [Authorize]
         [Route("getAllitems")]
@@ -89,5 +89,16 @@ namespace Petawel.Controllers
             Response response =   dbConnections.SaveProduct(product);
             return response;
         }
+
+        [HttpPost]
+        [Route("Registration")]
+        public Response Registration(Registration registration)
+        {
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response = dbConnections.Registration( registration,sqlConnection);
+            return response;
+        }
+
     }
 }
