@@ -31,7 +31,6 @@ namespace Petawel.Controllers
             DbConnections dbConnections = new DbConnections();
 
 
-            // Perform login logic here, for example checking username and password against a database
 
             return dbConnections.checkCredentials(email, password, sqlConnection);
         }

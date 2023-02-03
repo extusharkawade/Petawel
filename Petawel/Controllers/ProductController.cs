@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -16,13 +17,34 @@ namespace Petawel.Controllers
     {
 
         private readonly IConfiguration _configuration;
+        private readonly JwtAuthenticationManager jwtAuthenticationManager;
 
-        public ProductController(IConfiguration configuration)
+        public ProductController(IConfiguration configuration,JwtAuthenticationManager jwtAuthenticationManager)
         {
             _configuration = configuration;
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
+
         }
+
+        [AllowAnonymous]
+        [HttpPost("Authorize")]
+        public IActionResult AuthUser([FromBody] LoginDto loginDto)
+        {
+            var token = jwtAuthenticationManager.Authenticate(loginDto.email, loginDto.Password);
+            if(token==null)
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                return Ok(token);
+            }
+
+        }
+
       
         [HttpGet]
+        [AllowAnonymous]
         [Route("Test")]
         public string Test()
         {
@@ -30,6 +52,7 @@ namespace Petawel.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("Product")]
         public Response Products(int ProdId)
         { 
@@ -43,6 +66,7 @@ namespace Petawel.Controllers
         //Below code Retrives All data without any Id
         
         [HttpGet]
+        [Authorize]
         [Route("getAllitems")]
         public String Get()
         {
@@ -61,6 +85,7 @@ namespace Petawel.Controllers
                  
                 }
         [HttpPost]
+        [Authorize]
         [Route("Product_Update")]
         public Response ProductU(int ProdId, string name, int price, string details, int availablity, string path)
         {
@@ -77,6 +102,7 @@ namespace Petawel.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("SaveProduct")]
         public Response SaveProduct(SaveProductDto product)
         {
