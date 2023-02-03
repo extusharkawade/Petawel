@@ -93,7 +93,6 @@ namespace Petawel.Controllers.Models
 
         }
 
-
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
             Response response = new Response();
@@ -133,9 +132,33 @@ namespace Petawel.Controllers.Models
                 response.StatusMessage = "Registration Failed";
             }
 
-
             return response;
         }
 
+        public Response ProductbyCategory(int id, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+            SqlCommand sqlCommand = new SqlCommand("select * from category where category_id=" + id, sqlConnection);
+            sqlConnection.Open();
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                        response.categories= new Category();
+                        response.categories.category_id= (int)reader["category_id"];
+                        response.categories.category_name = (String)reader["category_name"];
+
+                        response.StatusMessage = "Product Found";
+                        response.StatusCode = 200;
+                    }
+                else
+                {
+                    response.StatusMessage = "Product Found";
+                    response.StatusCode = 100;
+                }
+            }
+            sqlConnection.Close();
+            return response;
+        }
     }
-}
+    }
