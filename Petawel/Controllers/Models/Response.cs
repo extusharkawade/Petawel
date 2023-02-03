@@ -1,4 +1,6 @@
-﻿namespace Petawel.Controllers.Models
+﻿using Petawel.DTO;
+
+namespace Petawel.Controllers.Models
 {
     public class Response
     {

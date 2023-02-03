@@ -1,23 +1,32 @@
-﻿using System.Data;
+﻿using Petawel.DTO;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Petawel.Controllers.Models
 {
     public class DbConnections
     {
+
+
+
         private readonly IConfiguration _configuration;
         SqlConnection sqlConnection;
+
         public DbConnections(IConfiguration configuration)
         {
             _configuration = configuration;
             sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+
+
         }
-        public Response FindProductById(int id, SqlConnection sqlConnection)
+
+        public Response FindProductById(int id)
         {
             Response response = new();
-            SqlCommand sqlCommand = new SqlCommand("select * from products where prod_id="+id,sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("select * from products where prod_id=" + id, sqlConnection);
             sqlConnection.Open();
-           // SqlDataReader reader = sqlCommand.ExecuteReader();
+            // SqlDataReader reader = sqlCommand.ExecuteReader();
             using (SqlDataReader reader = sqlCommand.ExecuteReader())
             {
                 if (reader.Read())
@@ -36,11 +45,15 @@ namespace Petawel.Controllers.Models
                         response.StatusMessage = "Product Retrieved Successfully";
                         response.StatusCode = 200;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         response.StatusMessage = "BAD REQUEST";
                         response.StatusCode = 500;
                     }
+
+
+
+
                 }
                 else
                 {
@@ -52,7 +65,9 @@ namespace Petawel.Controllers.Models
             return response;
         }
 
-        public Response getAllProduct(SqlConnection sqlConnection)
+
+    
+        public Response getAllProduct()
         {
             Response responseresponse = new Response();
             SqlDataAdapter da = new SqlDataAdapter("Select * from products", sqlConnection);
@@ -96,7 +111,7 @@ namespace Petawel.Controllers.Models
         public Response UpdateProduct(int id, SqlConnection sqlConnection, ProductModel productModel)
         {
             Response response = new Response();
-            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productModel.ProdName + "', price = '" + productModel.ProdPrice + "', prod_details = '" + productModel.ProdDetails + "', available_quantity = '" + productModel.AvailableQuantity + "', image_path = '" + productModel.ImagePath + "' where prod_id = '"+id+"'", sqlConnection);
+            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productModel.ProdName + "', price = '" + productModel.ProdPrice + "', prod_details = '" + productModel.ProdDetails + "', available_quantity = '" + productModel.AvailableQuantity + "', image_path = '" + productModel.ImagePath + "' where prod_id = '" + id + "'", sqlConnection);
             //SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + temp + "' where prod_id = 1 ", sqlConnection);
             sqlConnection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -160,5 +175,108 @@ namespace Petawel.Controllers.Models
             sqlConnection.Close();
             return response;
         }
+
+        public Response SaveProduct(SaveProductDto productModel)
+        {
+
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("insert into products values('" + productModel.ProdName + "' ,'" + productModel.ProdPrice + "','" + productModel.ProdDetails + "','" + productModel.AvailableQuantity + "', '" + productModel.ImagePath + "','" + productModel.CatId + "');", sqlConnection);
+
+            sqlConnection.Open();
+            try
+            {
+                int i = cmd.ExecuteNonQuery();
+                sqlConnection.Close();
+                if (i > 0)
+                {
+                    //   response.Product = productModel;
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Successful";
+
+                }
+                else
+                {
+                    response.StatusCode = 500;
+                    response.StatusMessage = "not working";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 404;
+                response.StatusMessage = "Internal server error";
+            }
+
+            return response;
+
+        }
+        /*
+        public Response checkCredentials(String email, string password, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+
+            SqlCommand sqlCommand = new SqlCommand("select * from users where email='" + email+"' and password='"+password+"';", sqlConnection) ;
+            sqlConnection.Open();
+            SqlDataReader reader = sqlCommand.ExecuteReader();
+  
+
+            if (reader.Read())
+            {
+                response.StatusCode = 200;
+                response.StatusMessage="Login successfulll";
+
+            }
+            else
+            {
+                response.StatusCode = 401;
+                response.StatusMessage = "Login failed";
+            }
+
+            sqlConnection.Close();
+
+            return response;
+        }
+        */
+
+
+        public Dictionary<string, string> Credentials()
+        {
+            Response response = new Response();
+
+            try
+            { 
+            SqlDataAdapter da = new SqlDataAdapter("Select email,password from users", sqlConnection);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Dictionary<string, string> crednetials =
+                       new Dictionary<string, string>();
+
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+
+                    string email = Convert.ToString(dt.Rows[i]["email"]);
+                    string password = Convert.ToString(dt.Rows[i]["password"]);
+
+                    crednetials.Add(email, password);
+                }
+
+                sqlConnection.Close();
+
+                return crednetials;
+            }
+            else
+            {
+                return null;
+            }
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+
+
+        }
     }
-    }
+
+}
