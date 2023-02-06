@@ -74,7 +74,7 @@ namespace Petawel.Controllers
             product.ProdDetails = details;
             product.AvailableQuantity = availablity;
             product.ImagePath = path;
-            Response response = dbConnections.UpdateProduct(ProdId, product );
+            Response response = dbConnections.UpdateProduct(ProdId, sqlConnection, product);
             return response;
         }
 

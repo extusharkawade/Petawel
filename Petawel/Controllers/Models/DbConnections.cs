@@ -1,4 +1,5 @@
-﻿using Petawel.DTO;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -136,11 +137,11 @@ namespace Petawel.Controllers.Models
             sqlConnection.Open();       
             var i = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
-            if(i > 0)
+            if (i > 0)
             {
-                    response.StatusCode = 200;
-                    response.StatusMessage = "Registration Successful";
-                }
+                response.StatusCode = 200;
+                response.StatusMessage = "Registration Successful";
+            }
             else
             {
                 response.StatusCode = 100;
