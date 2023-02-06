@@ -130,7 +130,7 @@ namespace Petawel.Controllers.Models
             return response;
         }
 
-        public Response Registration(Registration registration, SqlConnection sqlConnection)
+        public Response Registration(Registration registration)
         {
             Response response = new Response();
             SqlCommand sqlCommand = new SqlCommand("INSERT INTO users (name,contact,email,password) VALUES('"+registration.Name+"','"+registration.contact+"','"+registration.Email+"','"+registration.Password+"')",sqlConnection);
@@ -253,6 +253,48 @@ namespace Petawel.Controllers.Models
 
 
         }
+
+        public Response getAllCategories()
+        {
+            Response response = new Response();
+            SqlDataAdapter da = new SqlDataAdapter("Select * from category", sqlConnection);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            List<Category> categories = new List<Category>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Category model = new Category();
+                    model.Id = Convert.ToInt32(dt.Rows[i]["category_id"]);
+                    model.CategoryName = Convert.ToString(dt.Rows[i]["category_name"]);
+                    model.ImagePath = Convert.ToString(dt.Rows[i]["image_path"]);
+
+                    categories.Add(model);
+                }
+                if (categories.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "OK";
+                    response.Categories = categories;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "Failed";
+                }
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            sqlConnection.Close();
+            return response;
+
+        }
+      
+
     }
 
 }

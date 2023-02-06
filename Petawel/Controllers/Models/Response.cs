@@ -8,6 +8,9 @@ namespace Petawel.Controllers.Models
         public string StatusMessage { get; set; }
         public ProductModel Product { get; set; }
         public List<ProductModel> Products { get; set; }
+        public Category Category { get; set; }
+        public List<Category> Categories { get; set; }
+        
 
 
 

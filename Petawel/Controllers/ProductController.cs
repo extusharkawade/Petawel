@@ -43,7 +43,6 @@ namespace Petawel.Controllers
         public Response Products(int ProdId)
         { 
            // Response response = new Response();
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
             Response response =dbConnections.FindProductById(ProdId);
           
@@ -56,7 +55,6 @@ namespace Petawel.Controllers
         [Route("getAllitems")]
         public Response Products()
         {
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
             Response response = dbConnections.getAllProduct();
             return response;
@@ -66,7 +64,6 @@ namespace Petawel.Controllers
         [Route("Product_Update")]
         public Response ProductU(int ProdId, string name, int price, string details, int availablity, string path)
         {
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
             ProductModel product= new ProductModel();
             product.ProdName = name;
@@ -83,7 +80,6 @@ namespace Petawel.Controllers
         [Route("SaveProduct")]
         public Response SaveProduct(SaveProductDto product)
         {
-           // SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
 
             Response response =   dbConnections.SaveProduct(product);
@@ -91,14 +87,16 @@ namespace Petawel.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("Registration")]
         public Response Registration(Registration registration)
         {
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
-            Response response = dbConnections.Registration( registration,sqlConnection);
+            Response response = dbConnections.Registration( registration);
             return response;
         }
+
+
 
     }
 }

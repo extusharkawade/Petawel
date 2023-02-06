@@ -11,6 +11,7 @@
 
         public string EmailConfirmed { get; set; }
 
+
         
     }
 }
