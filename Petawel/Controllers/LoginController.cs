@@ -44,6 +44,16 @@ namespace Petawel.Controllers
 
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Registration")]
+        public Response Registration(Registration registration)
+        {
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response = dbConnections.Registration(registration);
+            return response;
+        }
+
 
 
 

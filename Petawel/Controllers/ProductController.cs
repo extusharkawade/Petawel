@@ -86,25 +86,9 @@ namespace Petawel.Controllers
             return response;
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("Registration")]
-        public Response Registration(Registration registration)
-        {
-            DbConnections dbConnections = new DbConnections(_configuration);
-            Response response = dbConnections.Registration( registration);
-            return response;
-        }
+       
 
-        [HttpGet]
-        [Route("Category")]
-        public Response Categoryint (int id)
-        {
-            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-            DbConnections dbConnections = new DbConnections(_configuration);
-            Response response = dbConnections.ProductbyCategory(id,sqlConnection);
-            return response;
-        }
+       
         
 
     }
