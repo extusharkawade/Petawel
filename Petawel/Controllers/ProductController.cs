@@ -71,7 +71,7 @@ namespace Petawel.Controllers
             product.ProdDetails = details;
             product.AvailableQuantity = availablity;
             product.ImagePath = path;
-            Response response = dbConnections.UpdateProduct(ProdId, product );
+            Response response = dbConnections.UpdateProduct(ProdId, product);
             return response;
         }
 
@@ -96,7 +96,16 @@ namespace Petawel.Controllers
             return response;
         }
 
-
+        [HttpGet]
+        [Route("Category")]
+        public Response Categoryint (int id)
+        {
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+            DbConnections dbConnections = new DbConnections(_configuration);
+            Response response = dbConnections.ProductbyCategory(id,sqlConnection);
+            return response;
+        }
+        
 
     }
 }

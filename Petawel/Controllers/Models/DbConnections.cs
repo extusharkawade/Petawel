@@ -1,4 +1,5 @@
-﻿using Petawel.DTO;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -108,7 +109,6 @@ namespace Petawel.Controllers.Models
 
         }
 
-
         public Response UpdateProduct(int id, ProductModel productModel)
         {
             Response response = new Response();
@@ -137,18 +137,43 @@ namespace Petawel.Controllers.Models
             sqlConnection.Open();       
             var i = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
-            if(i > 0)
+            if (i > 0)
             {
-                    response.StatusCode = 200;
-                    response.StatusMessage = "Registration Successful";
-                }
+                response.StatusCode = 200;
+                response.StatusMessage = "Registration Successful";
+            }
             else
             {
                 response.StatusCode = 100;
                 response.StatusMessage = "Registration Failed";
             }
 
+            return response;
+        }
 
+        public Response ProductbyCategory(int id, SqlConnection sqlConnection)
+        {
+            Response response = new Response();
+            SqlCommand sqlCommand = new SqlCommand("select * from category where category_id=" + id, sqlConnection);
+            sqlConnection.Open();
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                        response.category= new Category();
+                        response.category.Id = (int)reader["category_id"];
+                        response.category.CategoryName = (String)reader["category_name"];
+
+                        response.StatusMessage = "Product Found";
+                        response.StatusCode = 200;
+                    }
+                else
+                {
+                    response.StatusMessage = "Product Found";
+                    response.StatusCode = 100;
+                }
+            }
+            sqlConnection.Close();
             return response;
         }
 
@@ -260,12 +285,13 @@ namespace Petawel.Controllers.Models
             SqlDataAdapter da = new SqlDataAdapter("Select * from category", sqlConnection);
             DataTable dt = new DataTable();
             da.Fill(dt);
-            List<Category> categories = new List<Category>();
+            
+            List<DTO.Category> categories = new List<DTO.Category>();
             if (dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    Category model = new Category();
+                    DTO.Category model = new DTO.Category();
                     model.Id = Convert.ToInt32(dt.Rows[i]["category_id"]);
                     model.CategoryName = Convert.ToString(dt.Rows[i]["category_name"]);
                     model.ImagePath = Convert.ToString(dt.Rows[i]["image_path"]);
@@ -276,7 +302,7 @@ namespace Petawel.Controllers.Models
                 {
                     response.StatusCode = 200;
                     response.StatusMessage = "OK";
-                    response.Categories = categories;
+                    response.categories = categories;
                 }
                 else
                 {
