@@ -4,7 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System;
-
+using System.Data.SqlClient;
+using PetawelAdmin.DTO;
 
 namespace PetawelAdmin.Models
 {
@@ -43,6 +44,31 @@ namespace PetawelAdmin.Models
                 response.StatusMessage = "not working";
             }
             return response;
+        }
+
+        public Boolean findAdmin(LoginDto loginDto)
+        {
+            string email = loginDto.email;
+            string password = loginDto.Password;
+            SqlCommand sqlCommand = new SqlCommand("Select * from users where email='" + email + "' and password='" + password + "' and isAdmin=1", sqlConnection);
+            Console.WriteLine("sqlconnection", sqlCommand.ToString());
+            sqlConnection.Open();
+
+        //    SqlDataReader data = sqlCommand.ExecuteReader();
+           
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+            {
+              
+                if (reader.Read())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
         }
     }
 }
