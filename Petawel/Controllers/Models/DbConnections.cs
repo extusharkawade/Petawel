@@ -3,6 +3,7 @@ using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Petawel.Controllers.Models
 {
@@ -151,32 +152,48 @@ namespace Petawel.Controllers.Models
             return response;
         }
 
+        //Give input in swagger as int 1 for food , 2 for Toy, 3 for cleaners as categories.
         public Response ProductbyCategory(int id, SqlConnection sqlConnection)
         {
             Response response = new Response();
-            SqlCommand sqlCommand = new SqlCommand("select * from category where category_id=" + id, sqlConnection);
-            sqlConnection.Open();
-            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+            SqlDataAdapter da = new SqlDataAdapter("SELECT s.prod_name, s.prod_id, s.available_quantity, s.image_path, s.price,s.prod_details,s.price, c.category_id, category_name FROM products s INNER JOIN category c ON c.category_id = s.category_id WHERE c.category_id=" + id, sqlConnection);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            List<ProductModel> products = new List<ProductModel>();
+            if (dt.Rows.Count > 0)
             {
-                if (reader.Read())
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                        response.category= new Category();
-                        response.category.Id = (int)reader["category_id"];
-                        response.category.CategoryName = (String)reader["category_name"];
-
-                        response.StatusMessage = "Product Found";
-                        response.StatusCode = 200;
-                    }
+                    ProductModel model = new ProductModel();
+                    model.category_id = Convert.ToInt32(dt.Rows[i]["category_id"]);
+                    model.category_name = Convert.ToString(dt.Rows[i]["category_name"]);
+                    model.ProdId = Convert.ToInt32(dt.Rows[i]["prod_id"]);
+                    model.ProdName = Convert.ToString(dt.Rows[i]["prod_name"]);
+                    model.ProdPrice = Convert.ToInt32(dt.Rows[i]["price"]);
+                    model.ProdDetails = Convert.ToString(dt.Rows[i]["prod_details"]);
+                    model.AvailableQuantity = Convert.ToInt32(dt.Rows[i]["available_quantity"]);
+                    model.ImagePath = Convert.ToString(dt.Rows[i]["image_path"]);
+                    products.Add(model);
+                }
+                if (products.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "OK";
+                    response.Products =products;
+                }
                 else
                 {
-                    response.StatusMessage = "Product Found";
                     response.StatusCode = 100;
+                    response.StatusMessage = "Failed";
                 }
             }
-            sqlConnection.Close();
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
             return response;
         }
-
         public Response SaveProduct(SaveProductDto productModel)
         {
 

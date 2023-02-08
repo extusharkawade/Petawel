@@ -9,6 +9,10 @@
         public int AvailableQuantity { get; set; }
         public string ImagePath { get; set; }
 
+        public int category_id { get; set; }
+
+        public String category_name { get; set; }   
+
         public ProductModel(int prodId, string prodName, float prodPrice, string prodDetails, int availableQuantity, string imagePath)
         {
             ProdId = prodId;
@@ -17,6 +21,7 @@
             ProdDetails = prodDetails;
             AvailableQuantity = availableQuantity;
             ImagePath = imagePath;
+            category_id = category_id;
         }
 
         public ProductModel(ProductModel productModel)
@@ -27,6 +32,7 @@
             ProdDetails = productModel.ProdDetails;
             AvailableQuantity = productModel.AvailableQuantity;
             ImagePath = productModel.ImagePath;
+            category_id = productModel.category_id;
         }
 
         public ProductModel()
