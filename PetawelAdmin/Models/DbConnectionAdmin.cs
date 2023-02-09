@@ -46,6 +46,73 @@ namespace PetawelAdmin.Models
             return response;
         }
 
+        public ResponseAdmin ProductbyCategory(int id, SqlConnection sqlConnection)
+        {
+            ResponseAdmin response = new ResponseAdmin();
+            SqlCommand sqlCommand = new SqlCommand("select * from category where category_id=" + id, sqlConnection);
+            sqlConnection.Open();
+            using (SqlDataReader reader = sqlCommand.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    response.category = new Category();
+                    response.category.Id = (int)reader["category_id"];
+                    response.category.CategoryName = (String)reader["category_name"];
+                    response.category.ImagePath = (String)reader["image_path"];
+
+                    response.StatusMessage = "Product Found";
+                    response.StatusCode = 200;
+                }
+                else
+                {
+                    response.StatusMessage = "Product Found";
+                    response.StatusCode = 100;
+                }
+            }
+            sqlConnection.Close();
+            return response;
+        }
+        public ResponseAdmin getAllCategories()
+        {
+            ResponseAdmin response = new ResponseAdmin();
+            SqlDataAdapter da = new SqlDataAdapter("Select * from category", sqlConnection);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            List<DTO.Category> categories = new List<DTO.Category>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DTO.Category model = new DTO.Category();
+                    model.Id = Convert.ToInt32(dt.Rows[i]["category_id"]);
+                    model.CategoryName = Convert.ToString(dt.Rows[i]["category_name"]);
+                    model.ImagePath = Convert.ToString(dt.Rows[i]["image_path"]);
+
+                    categories.Add(model);
+                }
+                if (categories.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "OK";
+                    response.categories = categories;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "Failed";
+                }
+            }
+            else
+            {
+                response.StatusCode = 100;
+                response.StatusMessage = "Failed";
+            }
+            sqlConnection.Close();
+            return response;
+
+        }
+
         public Boolean findAdmin(LoginDto loginDto)
         {
             string email = loginDto.email;

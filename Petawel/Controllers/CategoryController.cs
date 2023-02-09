@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Petawel.Controllers.Models;
 using System.Data.SqlClient;
-
 namespace Petawel.Controllers
 {
     [Route("api/[controller]")]
