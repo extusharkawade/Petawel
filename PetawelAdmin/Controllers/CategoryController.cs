@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetawelAdmin.Models;
 using System.Data.SqlClient;
 using PetawelAdmin.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PetawelAdmin.Controllers
 {
@@ -39,5 +40,17 @@ namespace PetawelAdmin.Controllers
             return ResponseAdmin;
         }
 
+        //   [Authorize]
+        [HttpPost]
+        [Route("AddCategory")]
+        public ResponseAdmin addNewCategory(Category category)
+        {
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
+            DbConnectionAdmin DbConnectionAdmin = new DbConnectionAdmin(_configuration);
+            ResponseAdmin ResponseAdmin = DbConnectionAdmin.AddNewCategory(category, sqlConnection);
+            return ResponseAdmin;
+
+
+        }
     }
 }

@@ -255,5 +255,35 @@ namespace PetawelAdmin.Models
 
             }
         }
+
+        public ResponseAdmin AddNewCategory(Category category, SqlConnection sqlConnection)
+        {
+            SqlCommand cmd = new SqlCommand("insert into category values('" + category.CategoryName+ "' ,'" + category.ImagePath+ "');", sqlConnection);
+            ResponseAdmin responseAdmin = new ResponseAdmin();
+            sqlConnection.Open();
+            try
+            {
+                int i = cmd.ExecuteNonQuery();
+                sqlConnection.Close();
+                if (i > 0)
+                {
+                    responseAdmin.StatusCode = 200;
+                    responseAdmin.StatusMessage = "New Category inserted Successfully.";
+                    responseAdmin.category = category;
+
+                }
+                else
+                {
+                    responseAdmin.StatusCode = 500;
+                    responseAdmin.StatusMessage = "Unable to add new category";
+                }
+            }
+            catch (Exception ex)
+            {
+                responseAdmin.StatusCode = 404;
+                responseAdmin.StatusMessage = "Internal server error" +ex;
+            }
+                    return responseAdmin;
+        }
     }
 }
