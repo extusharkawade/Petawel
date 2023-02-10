@@ -171,6 +171,7 @@ namespace PetawelAdmin.Models
             sqlConnection.Open();
             using (SqlDataReader reader = sqlCommand.ExecuteReader())
             {
+                try { 
                 if (reader.Read())
                 {
                     ResponseAdmin.category = new Category();
@@ -185,6 +186,11 @@ namespace PetawelAdmin.Models
                 {
                     ResponseAdmin.StatusMessage = "Product Found";
                     ResponseAdmin.StatusCode = 100;
+                }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Exception in product by category " + e);
                 }
             }
             sqlConnection.Close();
