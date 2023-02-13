@@ -7,6 +7,7 @@ using System;
 using System.Data.SqlClient;
 using PetawelAdmin.DTO;
 
+
 namespace PetawelAdmin.Models
 {
     public class DbConnectionAdmin
@@ -264,7 +265,7 @@ namespace PetawelAdmin.Models
 
         public ResponseAdmin AddNewCategory(Category category, SqlConnection sqlConnection)
         {
-            SqlCommand cmd = new SqlCommand("insert into category values('" + category.CategoryName+ "' ,'" + category.ImagePath+ "');", sqlConnection);
+            SqlCommand cmd = new SqlCommand("insert into category values('" + category.CategoryName+ "' ,'" + category.ImagePath+ "' , '"+category.Main_id+"');", sqlConnection);
             ResponseAdmin responseAdmin = new ResponseAdmin();
             sqlConnection.Open();
             try
