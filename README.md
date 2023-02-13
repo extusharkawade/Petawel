@@ -8,9 +8,11 @@ Backend api's for the Pet Ecom
 
 "'create table users(userId int identity(1,1) primary key, "name" varchar(50), "contact" varchar(10), "email" varchar(50),"password" varchar(16));"
 
-"'create table category(category_id int identity(1,1) primary key, category_name varchar(50));
+"'create table main_category(category_id int identity(1,1) primary key, category_name varchar(50), image_path varchar(225));"
 
-"'create table products(prod_id int identity(1,1)primary key ,prod_name varchar(50),price float,prod_details varchar(128),available_quantity int,image_path varchar(50), category_id int foreign key references category(category_id));
+"'create table category(category_id int identity(1,1) primary key, category_name varchar(50), image_path varchar(225), main_id int foreign key references       main_category(category_id) );"
+
+"'create table products(prod_id int identity(1,1)primary key ,prod_name varchar(50),price float,prod_details varchar(128),available_quantity int,image_path varchar(50), category_id int foreign key references category(category_id));"
 
 # ✅Features
 - https://localhost:7028/api/Authorization/Authorize this api will generate jwt token if correct credentials are passed.
