@@ -6,7 +6,7 @@ Backend api's for the Pet Ecom
 - Create database with name 'petawel'.
 - Following table queries are needed to create tables.
 
-"'create table users(userId int identity(1,1) primary key, "name" varchar(50), "contact" varchar(10), "email" varchar(50),"password" varchar(16));"
+"'create table users(userId int identity(1,1) primary key, "name" varchar(50), "contact" varchar(10), "email" varchar(50),"password" varchar(16), isAdmin int);"
 
 "'create table main_category(category_id int identity(1,1) primary key, category_name varchar(50), image_path varchar(225));"
 
