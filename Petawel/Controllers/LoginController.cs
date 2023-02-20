@@ -59,22 +59,7 @@ namespace Petawel.Controllers
 
 
 
-        /*     [HttpPost]
-             public Response Login([FromBody] DTO.LoginDto model)
-             {
-                 SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
-
-
-                 string email = model.email;
-                 string password = model.Password;
-
-                 DbConnections dbConnections = new DbConnections();
-
-
-
-                 return dbConnections.checkCredentials(email, password, sqlConnection);
-             }
-        */
+       
     }
 
 }

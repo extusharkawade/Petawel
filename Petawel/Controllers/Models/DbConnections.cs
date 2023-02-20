@@ -43,6 +43,8 @@ namespace Petawel.Controllers.Models
                         response.Product.ProdDetails = (string)reader["prod_details"];
                         response.Product.AvailableQuantity = (int)reader["available_quantity"];
                         response.Product.ImagePath = (string)reader["image_path"];
+                        response.Product.category_id = (int)reader["category_id"];
+                      //  response.Product.category_name = 
 
                         response.StatusMessage = "Product Retrieved Successfully";
                         response.StatusCode = 200;
@@ -110,27 +112,7 @@ namespace Petawel.Controllers.Models
 
         }
 
-        public Response UpdateProduct(int id, ProductModel productModel)
-        {
-            Response response = new Response();
-            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productModel.ProdName + "', price = '" + productModel.ProdPrice + "', prod_details = '" + productModel.ProdDetails + "', available_quantity = '" + productModel.AvailableQuantity + "', image_path = '" + productModel.ImagePath + "' where prod_id = '" + id + "'", sqlConnection);
-            //SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + temp + "' where prod_id = 1 ", sqlConnection);
-            sqlConnection.Open();
-            int i = cmd.ExecuteNonQuery();
-            sqlConnection.Close();
-            if (i > 0)
-            {
-                response.StatusCode = 200;
-                response.StatusMessage = "Successful";
-            }
-            else
-            {
-                response.StatusCode = 500;
-                response.StatusMessage = "not working";
-            }
-            return response;
-        }
-
+      
         public Response Registration(Registration registration)
         {
             Response response = new Response();
@@ -184,77 +166,18 @@ namespace Petawel.Controllers.Models
                 else
                 {
                     response.StatusCode = 100;
-                    response.StatusMessage = "Failed";
+                    response.StatusMessage = "Something Went Wrong.";
                 }
             }
             else
             {
                 response.StatusCode = 100;
-                response.StatusMessage = "Failed";
+                response.StatusMessage = "No Products Available In This Category.";
             }
             return response;
         }
-        public Response SaveProduct(SaveProductDto productModel)
-        {
-
-            Response response = new Response();
-            SqlCommand cmd = new SqlCommand("insert into products values('" + productModel.ProdName + "' ,'" + productModel.ProdPrice + "','" + productModel.ProdDetails + "','" + productModel.AvailableQuantity + "', '" + productModel.ImagePath + "','" + productModel.CatId + "');", sqlConnection);
-
-            sqlConnection.Open();
-            try
-            {
-                int i = cmd.ExecuteNonQuery();
-                sqlConnection.Close();
-                if (i > 0)
-                {
-                    //   response.Product = productModel;
-                    response.StatusCode = 200;
-                    response.StatusMessage = "Successful";
-
-                }
-                else
-                {
-                    response.StatusCode = 500;
-                    response.StatusMessage = "not working";
-                }
-            }
-            catch (Exception ex)
-            {
-                response.StatusCode = 404;
-                response.StatusMessage = "Internal server error";
-            }
-
-            return response;
-
-        }
-        /*
-        public Response checkCredentials(String email, string password, SqlConnection sqlConnection)
-        {
-            Response response = new Response();
-
-            SqlCommand sqlCommand = new SqlCommand("select * from users where email='" + email+"' and password='"+password+"';", sqlConnection) ;
-            sqlConnection.Open();
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-  
-
-            if (reader.Read())
-            {
-                response.StatusCode = 200;
-                response.StatusMessage="Login successfulll";
-
-            }
-            else
-            {
-                response.StatusCode = 401;
-                response.StatusMessage = "Login failed";
-            }
-
-            sqlConnection.Close();
-
-            return response;
-        }
-        */
-
+      
+      
 
         public Dictionary<string, string> Credentials()
         {

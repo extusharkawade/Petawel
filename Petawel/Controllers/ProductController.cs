@@ -7,6 +7,8 @@ using Petawel.Controllers.Models;
 using Petawel.DTO;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 
 namespace Petawel.Controllers
@@ -27,20 +29,13 @@ namespace Petawel.Controllers
             this.jwtAuthenticationManager = jwtAuthenticationManager;
 
         }
-
+             
       
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("Test")]
-        public string Test()
-        {
-            return "working";
-        }
 
         [HttpGet]
       //  [Authorize]
         [Route("Product")]
-        public Response Products(int ProdId)
+        public Response Product(int ProdId)
         { 
            // Response response = new Response();
             DbConnections dbConnections = new DbConnections(_configuration);
@@ -59,37 +54,22 @@ namespace Petawel.Controllers
             Response response = dbConnections.getAllProduct();
             return response;
         }
-        [HttpPost]
-      //  [Authorize]
-        [Route("Product_Update")]
-        public Response ProductU(int ProdId, string name, int price, string details, int availablity, string path)
+
+
+        [HttpGet]
+        [Route("ProductsByCategory")]
+        public Response ProductsByCategory(int id)
         {
+            SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("conn").ToString());
             DbConnections dbConnections = new DbConnections(_configuration);
-            ProductModel product= new ProductModel();
-            product.ProdName = name;
-            product.ProdPrice= price;
-            product.ProdDetails = details;
-            product.AvailableQuantity = availablity;
-            product.ImagePath = path;
-            Response response = dbConnections.UpdateProduct(ProdId, product);
+            Response response = dbConnections.ProductbyCategory(id, sqlConnection);
             return response;
         }
 
-        [HttpPost]
-       // [Authorize]
-        [Route("SaveProduct")]
-        public Response SaveProduct(SaveProductDto product)
-        {
-            DbConnections dbConnections = new DbConnections(_configuration);
 
-            Response response =   dbConnections.SaveProduct(product);
-            return response;
-        }
 
-       
 
-       
-        
+
 
     }
 }
