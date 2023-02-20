@@ -1,4 +1,6 @@
-﻿namespace PetawelAdmin.DTO
+﻿
+
+namespace PetawelAdmin.DTO
 {
     public class SaveProductDto
     {
