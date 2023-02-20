@@ -2,16 +2,17 @@
 using PetawelAdmin.Models;
 using System.Data.SqlClient;
 using PetawelAdmin.DTO;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PetawelAdmin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HomeController : Controller
+    public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
        
-        public HomeController(IConfiguration configuration)
+        public ProductController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -38,19 +39,13 @@ namespace PetawelAdmin.Controllers
            ResponseAdmin ResponseAdmin = DbConnectionAdmin.getAllProduct();
             return ResponseAdmin;
         }
-        [HttpPost]
+        [HttpPut]
         //  [Authorize]
         [Route("Product_Update")]
-        public ResponseAdmin ProductU(int ProdId, string name, int price, string details, int availablity, string path)
+        public ResponseAdmin ProductU(SaveProductDto productDto, [NotNull]int productId)
         {
             DbConnectionAdmin DbConnectionAdmin = new DbConnectionAdmin(_configuration);
-            ProductModel product = new ProductModel();
-            product.ProdName = name;
-            product.ProdPrice = price;
-            product.ProdDetails = details;
-            product.AvailableQuantity = availablity;
-            product.ImagePath = path;
-           ResponseAdmin ResponseAdmin = DbConnectionAdmin.UpdateProduct(ProdId, product);
+           ResponseAdmin ResponseAdmin = DbConnectionAdmin.UpdateProduct(productDto,productId);
             return ResponseAdmin;
         }
 

@@ -110,10 +110,10 @@ namespace PetawelAdmin.Models
 
         }
 
-        public ResponseAdmin UpdateProduct(int id, ProductModel productModel)
+        public ResponseAdmin UpdateProduct(SaveProductDto productDto,int productId)
         {
             ResponseAdmin ResponseAdmin = new ResponseAdmin();
-            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productModel.ProdName + "', price = '" + productModel.ProdPrice + "', prod_details = '" + productModel.ProdDetails + "', available_quantity = '" + productModel.AvailableQuantity + "', image_path = '" + productModel.ImagePath + "' where prod_id = '" + id + "'", sqlConnection);
+            SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + productDto.ProdName + "', price = '" + productDto.ProdPrice + "', prod_details = '" + productDto.ProdDetails + "', available_quantity = '" + productDto.AvailableQuantity + "', image_path = '" + productDto.ImagePath + "' where prod_id = '" + productId + "'", sqlConnection);
             //SqlCommand cmd = new SqlCommand("Update products SET prod_name = '" + temp + "' where prod_id = 1 ", sqlConnection);
             sqlConnection.Open();
             int i = cmd.ExecuteNonQuery();
@@ -152,13 +152,14 @@ namespace PetawelAdmin.Models
                 else
                 {
                     response.StatusCode = 500;
-                    response.StatusMessage = "not working";
+                    response.StatusMessage = "Not Able To Insert";
                 }
             }
             catch (Exception ex)
             {
                 response.StatusCode = 404;
-                response.StatusMessage = "Internal server error";
+                Console.WriteLine(ex.ToString());
+                response.StatusMessage = "Please Select valid category ";
             }
 
             return response;
