@@ -25,3 +25,36 @@ Backend api's for the Pet Ecom
 
 _please note Authorization is currently disabled, to enable just remove the comment of [Authorize] anotation in controller_
 _if you enable Authorization please send authentication token in postman header_
+
+
+# API ENDPOINTS        
+### Petawel User
+
+#### Authentication Endpoints:
+- 1: POST /api/Authorization/Authorize.
+
+#### User Endpoints:
+- 2: POST /api/Authorization/Registration.
+
+#### Product Endpoints:
+- 1: GET /api/Product/Product.
+- 2: GET /api/Product/getAllitems.
+- 3: GET /api/Product/ProductsByCategory.
+
+#### Category endpoints:
+- 1: GET /api/Category/AllCategories
+
+### Petawel Admin
+#### Authentication Endpoints:
+- 1: POST /api/Authorization/Authorize
+
+#### Category endpoints
+- 1:GET /AllCategory
+- 2:GET /Category
+- 3:POST /AddCategory
+
+#### Product endpoints:
+- 1: GET /api/Product/Product
+- 2: GET /api/Product/getAllitems
+- 3: POST /api/Product/Product_Update
+- 4: POST /api/Product/SaveProduct
